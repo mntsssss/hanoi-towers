@@ -8,6 +8,7 @@ class HanoiTowers {
         this.selectedRod = null;
         this.gameActive = false;
         
+        // Попытка загрузить данные авторизованного игрока из локального хранилища браузера
         this.player = JSON.parse(localStorage.getItem('tg_user')) || null;
         
         this.init();
@@ -31,10 +32,12 @@ class HanoiTowers {
         document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
     }
 
+    // Метод, который перехватывает успешный вход от виджета Telegram
     setupTelegramCallback() {
         window.onTelegramAuth = async (user) => {
             try {
-                const authRes = await fetch('http://localhost:3000/api/auth/telegram', {
+                // Запрос идет локально на бэкенд
+                const authRes = await fetch('/api/auth/telegram', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -54,7 +57,7 @@ class HanoiTowers {
                 }
             } catch (error) {
                 console.error('Ошибка при отправке данных авторизации:', error);
-                alert('Не удалось связаться с локальным сервером бэкенда!');
+                alert('Не удалось связаться с сервером бэкенда!');
             }
         };
     }
@@ -130,13 +133,16 @@ class HanoiTowers {
         if (!this.gameActive) return;
 
         if (this.selectedRod === null) {
+            // Выбираем стержень, если он не пустой
             if (this.rods[rodIndex].length > 0) {
                 this.selectedRod = rodIndex;
             }
         } else {
+            // Если кликнули на тот же стержень — отменяем выбор
             if (this.selectedRod === rodIndex) {
                 this.selectedRod = null;
             } else {
+                // Пытаемся переместить диск
                 this.moveDisk(this.selectedRod, rodIndex);
                 this.selectedRod = null;
             }
@@ -160,6 +166,7 @@ class HanoiTowers {
             return;
         }
 
+        // Перемещаем диск
         fromDisks.pop();
         toDisks.push(diskToMove);
         
@@ -171,6 +178,7 @@ class HanoiTowers {
     }
 
     async checkWin() {
+        // Если все диски перенесены на 2-й или 3-й стержень (индексы 1 или 2)
         if (this.rods[1].length === this.numDisks || this.rods[2].length === this.numDisks) {
             this.gameActive = false;
             clearInterval(this.timerInterval);
@@ -179,28 +187,35 @@ class HanoiTowers {
             document.getElementById('message').textContent = `Поздравляем! Вы прошли игру за ${this.moves} ходов! Время: ${timeStr}`;
             document.getElementById('message').className = 'message success';
 
-            if (this.player && this.player.id) {
-                const gameData = {
-                    playerId: this.player.tg_id || this.player.id,
-                    completionTime: timeStr,
-                    movesCount: this.moves,
-                    difficulty: this.numDisks
-                };
+            // ИСПРАВЛЕНО: Защита от неопределенного ID пользователя. Проверяем оба возможных поля из БД
+            if (this.player) {
+                const targetId = this.player.tg_id || this.player.id;
+                
+                if (targetId) {
+                    const gameData = {
+                        playerId: targetId,
+                        completionTime: timeStr,
+                        movesCount: this.moves,
+                        difficulty: this.numDisks
+                    };
 
-                try {
-                    const res = await fetch('http://localhost:3000/api/games', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(gameData)
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                        this.loadStatistics(); 
+                    try {
+                        const res = await fetch('/api/games', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(gameData)
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.loadStatistics(); // Обновляем таблицу результатов
+                        }
+                    } catch (err) {
+                        console.error('Ошибка сохранения игры на сервере:', err);
                     }
-                } catch (err) {
-                    console.error('Ошибка сохранения игры на сервере:', err);
+                } else {
+                    console.error('Не удалось найти ID игрока в объекте сессии:', this.player);
                 }
             }
         }
@@ -208,11 +223,11 @@ class HanoiTowers {
 
     async loadStatistics() {
         try {
-            const res = await fetch('http://localhost:3000/api/games?limit=20');
+            const res = await fetch('/api/games?limit=20');
             const games = await res.json();
 
             const container = document.getElementById('statsContainer');
-            if (games.length === 0) {
+            if (!games || games.length === 0) {
                 container.innerHTML = '<p>Результатов пока нет. Будьте первыми!</p>';
                 return;
             }
@@ -235,7 +250,7 @@ class HanoiTowers {
                 const gameDate = new Date(game.game_date).toLocaleString('ru-RU');
                 html += `
                     <tr>
-                        <td>${game.player_name}</td>
+                        <td>${game.player_name || 'Неизвестный'}</td>
                         <td>${game.difficulty}</td>
                         <td>${game.moves_count}</td>
                         <td>${game.completion_time}</td>
@@ -261,10 +276,10 @@ class HanoiTowers {
             const rod = document.createElement('div');
             rod.className = 'rod';
             rod.innerHTML = `
-                <div class=\"rod-pole\"></div>
-                <div class=\"rod-base\"></div>
-                <div class=\"discs-container\" id=\"rod-${i}\"></div>
-                <div class=\"rod-label\">Стержень ${rodLabels[i]}</div>
+                <div class="rod-pole"></div>
+                <div class="rod-base"></div>
+                <div class="discs-container" id="rod-${i}"></div>
+                <div class="rod-label">Стержень ${rodLabels[i]}</div>
             `;
             
             rod.addEventListener('click', () => this.handleRodClick(i));
@@ -289,6 +304,7 @@ class HanoiTowers {
     }
 }
 
+// Запуск игры после полной загрузки страницы
 document.addEventListener('DOMContentLoaded', () => {
     new HanoiTowers();
 });

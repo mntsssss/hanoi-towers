@@ -190,7 +190,7 @@ class HanoiTowers {
             // Отправляем результаты на сервер
             if (this.player && this.player.id) {
                 const gameData = {
-                    playerId: this.player.id,
+                    playerId: this.player.tg_id,
                     completionTime: timeStr,
                     movesCount: this.moves,
                     difficulty: this.numDisks

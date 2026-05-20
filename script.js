@@ -1,3 +1,4 @@
+const BACKEND_URL = 'https://clear-berries-teach.loca.lt';
 class HanoiTowers {
     constructor() {
         this.rods = [[], [], []];

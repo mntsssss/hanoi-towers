@@ -188,11 +188,11 @@ class HanoiTowers {
             document.getElementById('message').className = 'message success';
 
             // Отправляем результаты на сервер
-            if (this.player && this.player.id) {
+            if (this.player && this.player.tg_id) { // Проверяем правильное поле
                 const gameData = {
-                    playerId: this.player.tg_id,
+                    playerId: this.player.tg_id, // Используем правильное поле
                     completionTime: timeStr,
-                    movesCount: this.moves,
+                movesCount: this.moves,
                     difficulty: this.numDisks
                 };
 
@@ -219,7 +219,7 @@ class HanoiTowers {
     async loadStatistics() {
         try {
             // Изменено на полный адрес локального сервера
-            const res = await fetch('http://localhost:3000/api/games?limit=20');
+            const res = await fetch(`http://localhost:3000/api/games?limit=20&t=${Date.now()}`);
             const games = await res.json();
 
             const container = document.getElementById('statsContainer');

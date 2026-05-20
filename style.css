@@ -1,0 +1,150 @@
+/* public/style.css - Максимально просто */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f0f0f0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+h1 {
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-size: 24px;
+}
+
+.game-controls {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #e0e0e0;
+}
+
+.game-controls select,
+.game-controls input,
+.game-controls button {
+    margin: 5px;
+    padding: 5px;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    padding: 10px;
+    background: #e0e0e0;
+    font-weight: bold;
+}
+
+.game-board {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin: 30px 0;
+    padding: 20px 0;
+    background: #d0d0d0;
+    min-height: 250px;
+}
+
+.rod {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    cursor: pointer;
+    position: relative;
+}
+
+.rod-pole {
+    width: 10px;
+    height: 200px;
+    background: #000000;
+    margin-bottom: 5px;
+}
+
+.rod-base {
+    width: 100px;
+    height: 10px;
+    background: #000000;
+}
+
+.rod-label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.discs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.disc {
+    height: 25px;
+    background: #6e0157;
+    border: 1px solid #460031;
+    margin: 1px 0;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.disc.selected {
+    border: 3px solid #ff00d4;
+    background: #8f006b;
+}
+
+.message {
+    text-align: center;
+    padding: 10px;
+    margin: 10px 0;
+    background: #e0e0e0;
+    font-weight: bold;
+}
+
+.message.success {
+    background: #ccffcc;
+    color: #006600;
+}
+
+.statistics {
+    margin-top: 30px;
+    padding: 10px;
+    background: #e0e0e0;
+}
+
+.statistics h2 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 14px;
+}
+
+.stats-table th,
+.stats-table td {
+    border: 1px solid #999;
+    padding: 5px;
+    text-align: left;
+}
+
+.stats-table th {
+    background: #ccc;
+}
+
+#refreshStats {
+    margin: 10px 0;
+    padding: 5px 10px;
+}

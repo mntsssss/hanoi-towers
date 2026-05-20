@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ханойские башни</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ханойские башни</h1>
+        
+        <div id="authSection" class="game-controls" style="text-align: center; padding: 20px;">
+            <h3>Для игры необходимо авторизоваться:</h3>
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-login="hanoi_towers_bot" 
+                    data-size="large" 
+                    data-onauth="onTelegramAuth(user)" 
+                    data-request-access="write"></script>
+        </div>
+
+        <div id="gameInterface" style="display: none;">
+            <div class="game-controls">
+                <div class="user-profile" id="userProfile" style="margin-bottom: 10px; font-weight: bold;"></div>
+                
+                <div class="difficulty-selector">
+                    <label for="difficulty">Количество дисков:</label>
+                    <select id="difficulty">
+                        <option value="3">3 (Легко)</option>
+                        <option value="4">4</option>
+                        <option value="5" selected>5 (Средне)</option>
+                        <option value="6">6</option>
+                        <option value="7">7 (Сложно)</option>
+                    </select>
+                </div>
+                
+                <button id="newGameBtn">Новая игра</button>
+                <button id="logoutBtn" style="background-color: #ff9999;">Выйти</button>
+            </div>
+
+            <div class="game-stats">
+                <div>Ходов: <span id="movesCount">0</span></div>
+                <div>Время: <span id="timeDisplay">00:00</span></div>
+                <div>Минимум ходов: <span id="minMoves">31</span></div>
+            </div>
+
+            <div class="game-board" id="gameBoard"></div>
+
+            <div class="message" id="message"></div>
+
+            <div class="statistics">
+                <h2>Статистика игр (Последние результаты)</h2>
+                <button id="refreshStats">Обновить статистику</button>
+                <div id="statsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

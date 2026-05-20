@@ -1,4 +1,3 @@
-const BACKEND_URL = 'https://clear-berries-teach.loca.lt';
 class HanoiTowers {
     constructor() {
         this.rods = [[], [], []];
@@ -9,7 +8,6 @@ class HanoiTowers {
         this.selectedRod = null;
         this.gameActive = false;
         
-        // Попытка загрузить данные авторизованного игрока из локального хранилища браузера
         this.player = JSON.parse(localStorage.getItem('tg_user')) || null;
         
         this.init();
@@ -33,7 +31,6 @@ class HanoiTowers {
         document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
     }
 
-    // Метод, который перехватывает успешный вход от виджета Telegram
     setupTelegramCallback() {
         window.onTelegramAuth = async (user) => {
             try {
@@ -179,7 +176,6 @@ class HanoiTowers {
     }
 
     async checkWin() {
-        // Если все диски перенесены на 2-й или 3-й стержень (индексы 1 или 2)
         if (this.rods[1].length === this.numDisks || this.rods[2].length === this.numDisks) {
             this.gameActive = false;
             clearInterval(this.timerInterval);
@@ -188,7 +184,6 @@ class HanoiTowers {
             document.getElementById('message').textContent = `Поздравляем! Вы прошли игру за ${this.moves} ходов! Время: ${timeStr}`;
             document.getElementById('message').className = 'message success';
 
-            // ИСПРАВЛЕНО: Защита от неопределенного ID пользователя. Проверяем оба возможных поля из БД
             if (this.player) {
                 const targetId = this.player.tg_id || this.player.id;
                 
@@ -210,7 +205,7 @@ class HanoiTowers {
                         });
                         const data = await res.json();
                         if (data.success) {
-                            this.loadStatistics(); // Обновляем таблицу результатов
+                            this.loadStatistics(); 
                         }
                     } catch (err) {
                         console.error('Ошибка сохранения игры на сервере:', err);
@@ -305,7 +300,6 @@ class HanoiTowers {
     }
 }
 
-// Запуск игры после полной загрузки страницы
 document.addEventListener('DOMContentLoaded', () => {
     new HanoiTowers();
 });

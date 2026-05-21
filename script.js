@@ -34,7 +34,7 @@ class HanoiTowers {
     setupTelegramCallback() {
         window.onTelegramAuth = async (user) => {
             try {
-                const authRes = await fetch('http://localhost:3001/api/auth/telegram', {
+                const authRes = await fetch('http://localhost:1646/api/auth/telegram', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -187,7 +187,7 @@ class HanoiTowers {
                 };
 
                 try {
-                    const res = await fetch('http://localhost:3001/api/games', {
+                    const res = await fetch('http://localhost:1646/api/games', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ class HanoiTowers {
 
     async loadStatistics() {
         try {
-            const res = await fetch(`http://localhost:3001/api/games?limit=20&t=${Date.now()}`);
+            const res = await fetch(`http://localhost:1646/api/games?limit=20&t=${Date.now()}`);
             const games = await res.json();
 
             const container = document.getElementById('statsContainer');
